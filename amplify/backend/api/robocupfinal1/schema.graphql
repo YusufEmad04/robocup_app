@@ -1,0 +1,14 @@
+type MazeRound @model @auth(rules: [{allow: groups, groups: ["MazeJudges"], operations: [read, create, update, delete]}, {allow: public, operations: [read]}]) {
+  id: ID!
+  mazeteamID: ID! @index(name: "byMazeTeam")
+  team: MazeTeam! @belongsTo(fields: ["mazeteamID"])
+  number: Int!
+  score: Int!
+}
+
+type MazeTeam @model @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["MazeJudges"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  name: String!
+  rounds: [MazeRound] @hasMany(indexName: "byMazeTeam", fields: ["id"])
+}
+ 
